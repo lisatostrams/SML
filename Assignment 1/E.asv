@@ -1,0 +1,8 @@
+function error = E(w,x,t)
+
+
+
+error = 0.5*(sum
+
+
+end
