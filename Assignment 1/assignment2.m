@@ -20,7 +20,7 @@ hold off;
 
 [X,Y] = meshgrid(-2.2:.2:2.2, -1.2:.2:3.2);
 Z = h_x_y(X,Y);
-starting_points = [[-2;-1],[2;3],[0;0],[2;-1],[-2;3],[-1;1]];
+starting_points = [[-2;-1],[2;3],[0;0],[2;-1],[-2;3],[0;3]];
 figure; 
 for i = 1:6
     subplot(2,3,i)
@@ -35,10 +35,10 @@ for i = 1:6
         delta = sum(abs(xn_1(:,end)-xn_1(:,end-1)))/2;
 
     end
-    plot(xn_1(1,:),xn_1(2,:),'k-o');
+    plot(xn_1(1,:),xn_1(2,:),'k-o', 'MarkerSize',5);
     hold off
-
-    title(sprintf('The gradient descent path from %d,%d',xn_1(1,1),xn_1(2,1)));
+    [m,n] = size(xn_1);
+    title(sprintf('The gradient descent path from (%d,%d), in %d steps',xn_1(1,1),xn_1(2,1), n));
     xlabel('X')
     ylabel('X');
 
