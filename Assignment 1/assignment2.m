@@ -17,27 +17,29 @@ xlabel('X')
 ylabel('Y')
 hold off; 
 %%
-figure; 
-[X,Y] = meshgrid(-2:.2:2, -1:.2:3);
+
+[X,Y] = meshgrid(-2.2:.2:2.2, -1.2:.2:3.2);
 Z = h_x_y(X,Y);
-contour(X,Y,Z);
-hold on;
-%%
+starting_points = [[-2;-1],[2;3],[0;0],[2;-1],[-2;3],[-1;1]];
+figure; 
+for i = 1:6
+    subplot(2,3,i)
 
-xn_1 = [-2;-1];
-delta = 0.1;
-while(delta>0.0000001)
-    xn_1 = [xn_1 gradient_descent(xn_1(:,end),0.0001)];
-    delta = sum(abs(xn_1(:,end)-xn_1(:,end-1)))/2;
-    
+    contour(X,Y,Z);
+    hold on;
+
+    xn_1 = starting_points(:,i);
+    delta = 0.1;
+    while(delta>0.0000001)
+        xn_1 = [xn_1 gradient_descent(xn_1(:,end),0.0001)];
+        delta = sum(abs(xn_1(:,end)-xn_1(:,end-1)))/2;
+
+    end
+    plot(xn_1(1,:),xn_1(2,:),'k-o');
+    hold off
+
+    title(sprintf('The gradient descent path from %d,%d',xn_1(1,1),xn_1(2,1)));
+    xlabel('X')
+    ylabel('X');
+
 end
-xn_1(:,end)
-%%
-
-
-plot(xn_1(1,:),xn_1(2,:),'k-o');
-hold off
-
-title('a contour plot and a gradient descend path');
-xlabel('x')
-ylabel('y');
