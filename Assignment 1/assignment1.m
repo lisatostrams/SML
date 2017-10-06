@@ -157,3 +157,9 @@ legend1 = legend('Function','Noisy observations','Estimate');
 set(legend1,'Position',[0.65 0.15 0.1 0.1]);
 %%
 
+figure; hold on; 
+plot(0:9, Erms_d10,'r--')
+plot(0:9, Erms_T, 'k-')
+legend('Erms Training set', 'Erms Test set' );
+title('Root mean square errors (D10)'); 
+hold off; 
