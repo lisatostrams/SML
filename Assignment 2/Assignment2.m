@@ -83,4 +83,4 @@ hold off;
 
 %%
 data = D(1:3);
-min = fminsearch(@(alpha,beta) loglikelihood(x,alpha,beta),[0,1])
+min = fminsearch(@(a,b) loglikelihood(data,a,b),[0,1]);

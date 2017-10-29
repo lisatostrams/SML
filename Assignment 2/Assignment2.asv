@@ -82,4 +82,5 @@ title('likelihood')
 hold off; 
 
 %%
-x = fminsearch(loglikelihood,[0,1])
+data = D(1:3);
+min = fminsearch(@(alpha,beta) loglikelihood(data,alpha,beta),[0,1])
