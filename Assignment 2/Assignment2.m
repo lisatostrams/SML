@@ -62,8 +62,8 @@ LL = zeros(100,100);
 L = zeros(100,100); 
 for i = 1:100
     for j = 1:100
-        LL(i,j) = loglikelihood(D(1:3),alphas(i),betas(j));
-        L(i,j) = likelihood(D(1:3),alphas(i),betas(j));
+        LL(i,j) = loglikelihood(D(1:20),alphas(i),betas(j));
+        L(i,j) = likelihood(D(1:20),alphas(i),betas(j));
     end
 end
 close all; 
@@ -80,3 +80,7 @@ xlabel('Alpha')
 ylabel('Beta')
 title('likelihood')
 hold off; 
+
+%%
+data = D(1:3);
+min = fminsearch(@(alpha,beta) loglikelihood(x,alpha,beta),[0,1])
