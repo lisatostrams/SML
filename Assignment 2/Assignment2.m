@@ -33,6 +33,7 @@ hold off;
 alpha = 10.*rand;
 beta = 2 + 2.*rand;
 theta = -pi/2 + pi.*rand(500,1);
+
 D = (beta*tan(theta))+alpha;
 means = zeros(200,1);
 j=1;
@@ -50,3 +51,32 @@ xlim([-10,2000])
 plot(10:10:2000,ones(200,1)*alpha,'r--','LineWidth',1.5)
 legend('Sample means','alpha')
 hold off;
+
+%% Exercise 3 part 3
+theta = -pi+0.01/2 + pi-0.01.*rand(500,1);
+D = (beta*tan(theta))+alpha;
+
+alphas = linspace(-10,10,100);
+betas = linspace(0,5,100); 
+LL = zeros(100,100);
+L = zeros(100,100); 
+for i = 1:100
+    for j = 1:100
+        LL(i,j) = loglikelihood(D(1:3),alphas(i),betas(j));
+        L(i,j) = likelihood(D(1:3),alphas(i),betas(j));
+    end
+end
+close all; 
+figure; hold on; 
+surf(alphas,betas,LL)
+xlabel('Alpha')
+ylabel('Beta')
+title('loglikelihood')
+hold off; 
+
+figure; hold on; 
+surf(alphas,betas,L)
+xlabel('Alpha')
+ylabel('Beta')
+title('likelihood')
+hold off; 
