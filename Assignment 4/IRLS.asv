@@ -1,7 +1,7 @@
 
 it_x = @(x)(x - (cos(x)/(-sin(x))));
 xs =zeros(1,5);
-xs(1)=-1;
+xs(1)=1;
 for i = 2:5
     xs(i)  = it_x(xs(i-1));
 end
@@ -56,8 +56,53 @@ xlabel('x_1')
 ylabel('x_2')
 zlabel('x_3')
 
-%%
+%% (1, phi_1,phi_2)
 Xd = [ones(1,size(X,1));X'];
+w = zeros(3,10); 
+w(:,1) = [0;0;0];
+
+sigmoid = @(w,x)(1/(1+exp(-(w'*x))));
+
+%initial values 
+init_p = arrayfun(@(x1,x2,x3)sigmoid(w(:,1),[x1;x2;x3]),Xd(1,:),Xd(2,:),Xd(3,:));
+
+for i = 2:10
+    y_n = arrayfun(@(x1,x2,x3)sigmoid(w(:,i-1),[x1;x2;x3]),Xd(1,:),Xd(2,:),Xd(3,:));
+    R = diag(y_n.*(1-y_n));
+    w(:,i) = w(:,i-1) - inv(Xd*R*Xd')*(Xd*(y_n-C')');
+end
+
+p = arrayfun(@(x1,x2,x3)sigmoid(w(:,end),[x1;x2;x3]),Xd(1,:),Xd(2,:),Xd(3,:));
+
+%%
+ce_init = -(sum(C'.*log(init_p)+(1-C').*log(1-init_p))) 
+ce = -(sum(C'.*log(p)+(1-C').*log(1-p)))
+%%
+
+mycolormap = colormap('Jet');
+d64 = [0:63]/63; % 
+c = interp1(d64, mycolormap,p);
+dotsize = 10;
+scatter(X(:,1),X(:,2),dotsize,c,'fill');
+xlabel('x_1');
+ylabel('x_2');
+title('Data colored by probability');
+colorbar; % what do the colors mean?
+
+%% add gaussian basis functions
+gaussian = @(x,mu,sigma) exp((x-mu)'*inv(sigma)*(x-mu));
+I = [1 0;0 1];
+sigma = 0.2*I;
+mu_1 = [0 0]';
+mu_2 = [1 1]';
+
+phi_1 = @(x) gaussian(x, mu_1, sigma);
+phi_2 = @(x) gaussian(x, mu_2, sigma);
+
+PHI = 
+
+%% (1, phi_1,phi_2)
+Xd = [ones(1,size(X,1));phi_1(X)';phi_2(X)'];
 w = zeros(3,10); 
 w(:,1) = [0;0;0];
 
