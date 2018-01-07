@@ -90,7 +90,7 @@ title('Data colored by probability');
 colorbar; % what do the colors mean?
 
 %% add gaussian basis functions
-gaussian = @(x,mu,sigma) exp((x-mu)'*inv(sigma)*(x-mu));
+gaussian = @(x,mu,sigma) exp(1/2*(x-mu)'*inv(sigma)*(x-mu));
 I = [1 0;0 1];
 sigma = 0.2*I;
 mu_1 = [0 0]';
