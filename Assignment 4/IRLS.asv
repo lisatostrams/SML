@@ -44,10 +44,10 @@ plot(X(~mask,1),X(~mask,2),'b.')
 hold off;
 
 %%
-% M = mean(X);
-% for i = 1:1000
-%     X(i,:) = X(i,:) - M;
-% end
+M = mean(X);
+for i = 1:1000
+    X(i,:) = X(i,:) - M;
+end
 %%
 cl=X(:,1).*X(:,2);
 figure(3);
@@ -64,6 +64,8 @@ hold off;
 Xd = [ones(1,size(X,1));X'];
 w = zeros(3,10); 
 w(:,1) = [0;0;0];
+
+% sigmoid = @(w,x)(1/(1+exp(-(w'*x))));
 
 %initial values 
 init_p = arrayfun(@(x1,x2,x3)sigmoid(w(:,1),[x1;x2;x3]),Xd(1,:),Xd(2,:),Xd(3,:));
@@ -100,22 +102,26 @@ I = [1 0;0 1];
 sigma = 0.2*I;
 mu_1 = [0 0]';
 mu_2 = [1 1]';
+mu_3 = [0 1]';
+mu_4 = [1 0]';
 
 phi_1 = @(x) gaussian(x, mu_1, sigma);
 phi_2 = @(x) gaussian(x, mu_2, sigma);
+phi_3 = @(x) gaussian(x, mu_3, sigma);
+phi_4 = @(x) gaussian(x, mu_4, sigma);
 
-PHI = zeros(size(X, 1), 2);
+PHI = zeros(size(X, 1), 4);
 for i=1:size(PHI,1)
     PHI(i,1) = phi_1(X(i,:)');
     PHI(i,2) = phi_2(X(i,:)');
+    PHI(i,2) = phi_3(X(i,:)');
+    PHI(i,2) = phi_4(X(i,:)');
 end
 
 figure(41);
 hold on;
 plot(PHI(mask,1),PHI(mask,2),'r.')
 plot(PHI(~mask,1),PHI(~mask,2),'b.')
-xlabel('\phi_1')
-ylabel('\phi_2')
 hold off;
 
 %% PHI' = (1, phi_1,phi_2)
