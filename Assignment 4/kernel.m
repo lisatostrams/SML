@@ -8,4 +8,3 @@ function f = kernel(theta, x, x_prime)
     
     f = theta_0 * exp(-(theta_1/2)*norm_2) + theta_2 + theta_3 * (x'*x_prime);  
 end
-

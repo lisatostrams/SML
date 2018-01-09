@@ -1,46 +1,60 @@
-thetas = [1 1 1 1;
+%% define some variables
+thetas = [1 1 0 0;
           1 4 0 0;
           9 4 0 0;
           1 64 0 0;
           1 0.25 0 0;
           1 4 10 0;
           1 4 0 5];
+theta = thetas(1,:);
 N = 101;
-
 X = linspace(-1,1,N);
-K = zeros(size(thetas,1),101,101);
 
-% populate the gram matrix
+%% compute the gram matrix for each value of theta
+K = zeros(size(thetas,1),N,N);
 for t=1:size(thetas,1)
-    for n=1:size(K,2)
-        for m=1:size(K,3)
-            K(t,n,m) = kernel(thetas(t,:), X(n), X(m));
-        end
-    end
+    K(t,:,:) = gram_matrix(thetas(t,:), X, @kernel);
 end
 
+%% sample 5 random functions
 mu = zeros(101,1)';
-rng 'default';
-% sample 5 random functions. Repeat for all thetas
-for t=1:size(thetas,1)
+rng(42);%'default';
+
+figure(); hold on;
+samples = mvnrnd(mu, squeeze(K(1,:,:)), 5);
+plot(X, samples, 'Linewidth', 2)
+title(strcat('[', sprintf('%d ', fix(theta)), ']'))
+hold off;
+
+%% repeat for all thetas
+figure(); hold on;
+for t=2:size(thetas,1)
     sigma = squeeze(K(t,:,:));
     samples = mvnrnd(mu, sigma, 5);
 
     % plot the sampled functions
-    figure(t); hold on;
-%     for i=1:5
-        plot(X, samples, 'Linewidth', 2)
-%     end
-    hold off;
+    subplot(2,3,t-1);
+    plot(X, samples, 'Linewidth', 2)
+    title(strcat('[', sprintf('%d ', fix(thetas(t,:))), ']'))
 end
+hold off;
 
-% % compute the gram matrix for the training dataset
-% D = [-0.5 0.5; 0.2 -1; 0.3 3; -0.1 -2.5];
-% K_5 = zeros(size(D,1),size(D,1))
-% for i=1:size(K_5,1)
-%     for j=1:size(K_5,2)
-%         K_5(i,j) = kernel(thetas(1), D(i,2), D(j,2));
-%     end
-% end
-% 
-% K_5
+%% compute the gram matrix for the training dataset
+D = [-0.5 0.5; 0.2 -1; 0.3 3; -0.1 -2.5];
+K_4 = gram_matrix(theta, D(:,1), @kernel);
+
+% K_4
+%% compute the predictive distribution
+x_n_1 = 0;
+beta = 1;
+
+k = arrayfun(@(x) kernel(theta, x, x_n_1), D(:,1));
+c = kernel(theta, x_n_1, x_n_1) + 1/beta;
+C_N = K_4;
+C_N(1:size(C_N,1)+1:end) = diag(C_N) + 1/beta;
+
+% C_N
+
+C_N_i = inv(C_N);
+m = k'*C_N_i*D(:,2);
+s_2 = c - k'*C_N_i*k;
