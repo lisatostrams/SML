@@ -1,0 +1,9 @@
+%% load the data
+N = 800; 
+D = 28*28; 
+X = uint8(zeros(N,D)); 
+fid = fopen('a012_images.dat', 'r'); 
+for i = 1:N 
+    X(i,:) = fread(fid, [D], 'uint8'); 
+end 
+status = fclose(fid); 
