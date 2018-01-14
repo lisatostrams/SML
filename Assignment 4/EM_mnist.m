@@ -1,7 +1,7 @@
 %% load the data
 N = 800; 
 D = 28*28;
-K = 4;
+K = 3;
 X = uint8(zeros(N,D));
 fid = fopen('a012_images.dat', 'r'); 
 for row = 1:N 
@@ -24,8 +24,14 @@ end
 hold off;
 
 %% run the algorithm, try different initializations
+% fid = fopen ('a012_labels.dat', 'r');
+% Z = fread(fid, N, 'uint8');
+mu2 = mean(X(Z==2,:));
+mu3 = mean(X(Z==3,:));
+mu4 = mean(X(Z==4,:));
+mu = [mu2;mu3;mu4];
 
-mu = random('unif', 0.25, 0.75, [K,D]);
+%mu = random('unif', 0.25, 0.75, [K,D]);
 pi = ones(K,1)/K;
 
 %%
@@ -84,3 +90,11 @@ end
 hold off;
 
 fprintf('%.1f %% of the data points is classified incorrectly.\n',incorrect/N*100)
+
+%%
+[X2, M] = imread('2.png','png');
+X2 = [X2(:,:,1) + X2(:,:,2) + X2(:,:,3)];
+X2 = reshape(X2,[1,784]);
+m2 =  mean(X2);
+X2(X2 >) = 1;
+X2(X2 <= mean(X2)) = 0;
