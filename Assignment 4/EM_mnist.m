@@ -11,7 +11,8 @@ status = fclose(fid);
 
 %% show some sample images
 % for reproducibility
-rng(42);
+% rng(42);
+rng('default')
 ix = randi(N,9,1);
 samples = X(ix,:);
 

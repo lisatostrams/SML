@@ -8,13 +8,14 @@ function f = expectation(X, mu, pi)
     for n=1:N
         for k=1:K
             log_p_xn_muk = sum(log(bern(X(n,:), mu(k,:))));
-            gamma(n,k) = exp(log(pi(k)) + log_p_xn_muk);
+            gamma(n,k) = log_p_xn_muk;
         end
     end
     
-    normFactor = sum(gamma,2);
     for n=1:N
-        gamma(n,:) = gamma(n,:) ./ normFactor(n);
+        max_ = max(gamma(n,:));
+        normFactor = sum(exp(gamma(n,:) - max_));
+        gamma(n,:) = exp(log(pi) + gamma(n,:)' - max_) / normFactor;
     end
        
     f = gamma;
