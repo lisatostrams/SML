@@ -1,7 +1,7 @@
 %% load the data
 N = 800; 
 D = 28*28;
-K = 3;
+K = 4;
 X = uint8(zeros(N,D));
 fid = fopen('a012_images.dat', 'r'); 
 for row = 1:N 
@@ -53,6 +53,7 @@ for row=1:rows
         end
         if(k==1)
             ylabel(sprintf('Iter %d',steps(row)-1))
+            ylabel(sprintf('Iter %d',steps(row)))
         end
         set(gca,'yticklabel',[]);
         set(gca,'xticklabel',[]);
@@ -79,8 +80,13 @@ for i = 1:K
         set(gca,'xticklabel',[]);
     end
     correct = mean(Labelsi==Label);
-    incorrect = incorrect + sum(Labelsi ~= Label); 
-    suptitle(sprintf('Cluster %d, most common true label %d occurs %.1f %%',i,Label,correct*100))
+    Lii = Labelsi(Labelsi~=Label);
+    second = mode(Lii); 
+    Liii = Lii(Lii~=second);
+    third = mode(Liii);
+    incorrect = incorrect + sum(Labelsi ~= Label);
+    suptitle(sprintf('Cluster %d, most common true label %d occurs %.1f%%. \n Second most common label %d occurs %.1f%%',...
+        i,Label,correct*100,second,mean(Labelsi==second)*100))
     hold off;
 end
 hold off;
