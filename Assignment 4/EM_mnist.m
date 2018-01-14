@@ -4,14 +4,14 @@ D = 28*28;
 K = 3;
 X = uint8(zeros(N,D));
 fid = fopen('a012_images.dat', 'r'); 
-for step = 1:N 
-    X(step,:) = fread(fid, D, 'uint8'); 
+for row = 1:N 
+    X(row,:) = fread(fid, D, 'uint8'); 
 end 
 status = fclose(fid);
 
 %% show some sample images
 % for reproducibility
-% rng(42);
+rng(42);
 ix = randi(N,9,1);
 samples = X(ix,:);
 
@@ -24,27 +24,31 @@ end
 hold off;
 
 %% run the algorithm, try different initializations
-for i=1:3
-    mu = random('unif', 0.25, 0.75, [K,D]);
-    pi = ones(K,1)/K;
 
-    it = Bernoulli_EM(X,mu,pi,40);
+mu = random('unif', 0.5, 0.5, [K,D]);
+pi = ones(K,1)/K;
 
-    %% display the result
-    figure();
-    colormap(gray(255));    
-    for step=1:4
-        mu = squeeze(it(step,:,1:D));
-        pi = squeeze(it(step,:,end));
+%%
+iterations = 40;
+it = Bernoulli_EM(X,mu,pi,iterations);
 
-        % map means to grayscale
-        mu = uint8(mu * 255);
-        
-        for k=1:K
-            subplot(4,K,(step-1)*K+k);
-            image(reshape(mu(k,:),[28,28]));
-            title(sprintf('Class: %d', k));        
-        end
-        
+%%
+steps = [1:4, iterations];
+rows = length(steps);
+%%
+figure();
+colormap(gray(255));    
+for row=1:rows
+    mu = squeeze(it(steps(row),:,1:D));
+    pi = squeeze(it(steps(row),:,end));
+
+    % map means to grayscale
+    mu = uint8(mu * 255);
+
+    for k=1:K
+        subplot(rows,K,(row-1)*K+k);
+        axis('square');
+        image(reshape(mu(k,:),[28,28]));
+        title(sprintf('Class %d', k));        
     end
 end

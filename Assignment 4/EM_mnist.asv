@@ -11,7 +11,7 @@ status = fclose(fid);
 
 %% show some sample images
 % for reproducibility
-% rng(42);
+rng(42);
 ix = randi(N,9,1);
 samples = X(ix,:);
 
@@ -24,27 +24,29 @@ end
 hold off;
 
 %% run the algorithm, try different initializations
-for i=1:3
-    mu = random('unif', 0.25, 0.75, [K,D]);
-    pi = ones(K,1)/K;
 
-    it = Bernoulli_EM(X,mu,pi,40);
+mu = random('unif', 0.25, 0.75, [K,D]);
+pi = ones(K,1)/K;
 
-    %% display the result
-    for step=1:10
-        mu = squeeze(it(step,:,1:D));
-        pi = squeeze(it(step,:,end));
+iterations = 40;
+it = Bernoulli_EM(X,mu,pi,iterations);
 
-        % map means to grayscale
-        mu = uint8(mu * 255);
-        
-        figure(step);
-        colormap(gray(255));
-        for k=1:K
-            subplot(1,K,k);
-            image(reshape(mu(k,:),[28,28]));
-            title(sprintf('Class: %d', k));        
-        end
-        
+%%
+steps = [1:4, iterations];
+%%
+figure();
+colormap(gray(255));    
+for step=1:length(steps)
+    mu = squeeze(it(step,:,1:D));
+    pi = squeeze(it(step,:,end));
+
+    % map means to grayscale
+    mu = uint8(mu * 255);
+
+    for k=1:K
+        subplot(4,K,(step-1)*K+k);
+        image(reshape(mu(k,:),[28,28]));
+        title(sprintf('Class: %d', k));        
     end
+
 end
