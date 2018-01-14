@@ -1,7 +1,7 @@
 %% load the data
 N = 800; 
 D = 28*28;
-K = 3;
+K = 4;
 X = uint8(zeros(N,D));
 fid = fopen('a012_images.dat', 'r'); 
 for row = 1:N 
@@ -77,8 +77,8 @@ for i = 1:K
     Liii = Lii(Lii~=second);
     third = mode(Liii);
     incorrect = incorrect + sum(Labelsi ~= Label);
-    suptitle(sprintf('Cluster %d, most common true label %d occurs %.1f%%. \n second most common label %d occurs %.1f%% \n third most common label %d occurs %.1f%%',...
-        i,Label,correct*100,second,mean(Labelsi==second)*100),third,mean(Labelsi==third)*100))
+    suptitle(sprintf('Cluster %d, most common true label %d occurs %.1f%%. \n second most common label %d occurs %.1f%%',...
+        i,Label,correct*100,second,mean(Labelsi==second)*100))
     hold off;
 end
 hold off;
