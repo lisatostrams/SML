@@ -1,16 +1,14 @@
 function f = expectation(X, mu, pi)
     X = double(X);
     N = size(X,1);
-    K = size(pi,2);
+    K = size(pi,1);
         
     bern = @(x,p) (p.^x .* (1-p).^(1-x));
     gamma = zeros(N,K);
-    log_p_X_mu = zeros(N,K);
     for n=1:N
         for k=1:K
             log_p_xn_muk = sum(log(bern(X(n,:), mu(k,:))));
             gamma(n,k) = exp(log(pi(k)) + log_p_xn_muk);
-%             log_p_X_mu(n,k) = log_p_xn_muk;
         end
     end
     
