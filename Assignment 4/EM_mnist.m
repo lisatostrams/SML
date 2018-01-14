@@ -33,7 +33,7 @@ iterations = 40;
 [it,gamma] = Bernoulli_EM(X,mu,pi,iterations);
 
 %%
-steps = [1:4, iterations];
+steps = [1:5:20, iterations+1];
 rows = length(steps);
 %%
 figure();
@@ -47,12 +47,15 @@ for row=1:rows
 
     for k=1:K
         subplot(rows,K,(row-1)*K+k);
-        axis('square');
         image(reshape(mu(k,:),[28,28]));
-        title(sprintf('Class %d', k));   
-        if(k==1)
-            xlabel('Iter %d',steps(row))
+        if(row==1)
+            title(sprintf('Class %d', k));   
         end
+        if(k==1)
+            ylabel(sprintf('Iter %d',steps(row)-1))
+        end
+        set(gca,'yticklabel',[]);
+        set(gca,'xticklabel',[]);
     end
 end
 
@@ -61,6 +64,8 @@ fid = fopen ('a012_labels.dat', 'r');
 Z = fread(fid, N, 'uint8');
 [argvalue, argmax] = max(gamma');
 incorrect = 0;
+
+%%
 for i = 1:K
     figure; colormap(BW_map);
     hold on;
@@ -70,6 +75,8 @@ for i = 1:K
     for s=1:min(36,size(Xi,1))
         subplot(6,6,s);
         image(reshape(Xi(s,:),[28,28]));
+        set(gca,'yticklabel',[]);
+        set(gca,'xticklabel',[]);
     end
     correct = mean(Labelsi==Label);
     incorrect = incorrect + sum(Labelsi ~= Label); 
