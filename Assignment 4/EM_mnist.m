@@ -103,15 +103,15 @@ fprintf('%.1f %% of the data points is classified incorrectly.\n',incorrect/N*10
 [X2, M] = imread('4.png','png');
 X2 = int8(mean(X2,3));
 X2 = reshape(X2,[1,784]);
-%%
+
 m2 =  mean(X2);
 X2(X2 <= m2) = 1;
 X2(X2 > m2) = 0;
-%%
+
 figure; colormap(BW_map);
-imagesc(reshape(X2,[28,28]))
+imagesc(reshape(mean(Xi),[28,28]))
 set(gca,'YDir','reverse')
-%%
+
 mu = squeeze(it(steps(row),:,1:D));
 pi = squeeze(it(steps(row),:,end));
 gamma2 = expectation(X2,mu,pi);
