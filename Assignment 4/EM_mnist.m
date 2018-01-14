@@ -25,12 +25,12 @@ hold off;
 
 %% run the algorithm, try different initializations
 
-mu = random('unif', 0.5, 0.5, [K,D]);
+mu = random('unif', 0.25, 0.75, [K,D]);
 pi = ones(K,1)/K;
 
 %%
 iterations = 40;
-it = Bernoulli_EM(X,mu,pi,iterations);
+[it,gamma] = Bernoulli_EM(X,mu,pi,iterations);
 
 %%
 steps = [1:4, iterations];
@@ -49,6 +49,33 @@ for row=1:rows
         subplot(rows,K,(row-1)*K+k);
         axis('square');
         image(reshape(mu(k,:),[28,28]));
-        title(sprintf('Class %d', k));        
+        title(sprintf('Class %d', k));   
+        if(k==1)
+            xlabel('Iter %d',steps(row))
+        end
     end
 end
+
+%%
+fid = fopen ('a012_labels.dat', 'r');
+Z = fread(fid, N, 'uint8');
+[argvalue, argmax] = max(gamma');
+incorrect = 0;
+for i = 1:K
+    figure; colormap(BW_map);
+    hold on;
+    Xi = X(argmax==i,:);
+    Labelsi = Z(argmax==i,:);
+    Label = mode(Labelsi);
+    for s=1:min(36,size(Xi,1))
+        subplot(6,6,s);
+        image(reshape(Xi(s,:),[28,28]));
+    end
+    correct = mean(Labelsi==Label);
+    incorrect = incorrect + sum(Labelsi ~= Label); 
+    suptitle(sprintf('Cluster %d, most common true label %d occurs %.1f %%',i,Label,correct*100))
+    hold off;
+end
+hold off;
+
+fprintf('%.1f %% of the data points is classified incorrectly.\n',incorrect/N*100)

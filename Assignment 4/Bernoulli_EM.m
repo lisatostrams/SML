@@ -1,4 +1,4 @@
-function f = Bernoulli_EM(X, mu, pi, iterations)
+function [f,gamma] = Bernoulli_EM(X, mu, pi, iterations)
     mu_ = mu; pi_ = pi;
     K = size(mu_,1);
     D = size(mu_,2);
