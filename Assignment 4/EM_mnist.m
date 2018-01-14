@@ -46,8 +46,6 @@ figure();
 colormap(gray(255));    
 for row=1:rows
     mu = squeeze(it(steps(row),:,1:D));
-    pi = squeeze(it(steps(row),:,end));
-
     % map means to grayscale
     mu = uint8(mu * 255);
 
@@ -113,5 +111,5 @@ imagesc(reshape(X2,[28,28]))
 set(gca,'YDir','reverse')
 %%
 mu = squeeze(it(end,:,1:D));
-pi = squeeze(it(end,:,end));
+pi = squeeze(it(end,:,end))';
 gamma2 = expectation(X2,mu,pi);
