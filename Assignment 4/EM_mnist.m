@@ -112,6 +112,6 @@ figure; colormap(BW_map);
 imagesc(reshape(X2,[28,28]))
 set(gca,'YDir','reverse')
 %%
-mu = squeeze(it(end,:,1:D));
-pi = squeeze(it(end,:,end));
+mu = squeeze(it(steps(row),:,1:D));
+pi = squeeze(it(steps(row),:,end));
 gamma2 = expectation(X2,mu,pi);
