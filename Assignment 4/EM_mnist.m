@@ -51,7 +51,7 @@ for row=1:rows
         image(reshape(mu(k,:),[28,28]));
         title(sprintf('Class %d', k));   
         if(k==1)
-            xlabel('Iter %d',steps(row))
+            ylabel(sprintf('Iter %d',steps(row)))
         end
     end
 end
@@ -72,8 +72,13 @@ for i = 1:K
         image(reshape(Xi(s,:),[28,28]));
     end
     correct = mean(Labelsi==Label);
-    incorrect = incorrect + sum(Labelsi ~= Label); 
-    suptitle(sprintf('Cluster %d, most common true label %d occurs %.1f %%',i,Label,correct*100))
+    Lii = Labelsi(Labelsi~=Label);
+    second = mode(Lii); 
+    Liii = Lii(Lii~=second);
+    third = mode(Liii);
+    incorrect = incorrect + sum(Labelsi ~= Label);
+    suptitle(sprintf('Cluster %d, most common true label %d occurs %.1f%%. \n second most common label %d occurs %.1f%% \n third most common label %d occurs %.1f%%',...
+        i,Label,correct*100,second,mean(Labelsi==second)*100),third,mean(Labelsi==third)*100))
     hold off;
 end
 hold off;

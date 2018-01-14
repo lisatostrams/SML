@@ -72,8 +72,13 @@ for i = 1:K
         image(reshape(Xi(s,:),[28,28]));
     end
     correct = mean(Labelsi==Label);
-    incorrect = incorrect + sum(Labelsi ~= Label); 
-    suptitle(sprintf('Cluster %d, most common true label %d occurs %.1f %%',i,Label,correct*100))
+    Lii = Labelsi(Labelsi~=Label);
+    second = mode(Lii); 
+    Liii = Lii(Lii~=second);
+    third = mode(Liii);
+    incorrect = incorrect + sum(Labelsi ~= Label);
+    suptitle(sprintf('Cluster %d, most common true label %d occurs %.1f%%. \n second most common label %d occurs %.1f%%',...
+        i,Label,correct*100,second,mean(Labelsi==second)*100))
     hold off;
 end
 hold off;
