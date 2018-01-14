@@ -119,7 +119,8 @@ for it =1:100
     end
     
     fprintf('Log likelihood is %1.4f in iteration %d. \n',loglikelihood(it+1), it)
-   
+    %mu
+    %Nk
 
 end
     
@@ -130,7 +131,7 @@ end
 % xlabel('Iteration')
 % ylabel('Log likelihood')
 
-
+%%
 
 figure; hold on; 
 [argvalue, argmax] = max(gamma');
@@ -144,4 +145,46 @@ title('x_1 x_2 coordinates colored by most probable component')
 xlabel('x_1')
 ylabel('x_2')
 legend('Group 1', 'Group 2','Group 3','Group 4')
+hold off;
+
+
+%% Calculate expectations for 4 samples
+A = [11.85, 2.2, 0.5, 4.0];
+B = [11.95, 3.1, 0.0, 1.0];
+C = [12.00, 2.5, 0.0, 2.0];
+D = [12.00, 3.0, 1.0, 6.3];
+samples = [A;B;C;D];
+gamma4 = zeros(4,K);
+for n = 1:4
+    sum_K = 0;
+    for i = 1:K
+        sum_K = sum_K + pi_k(i)*gauss(samples(n,:),mu(i,:),reshape(Sigma(i,:,:),[4,4]));
+    end
+
+    for i = 1:K
+        gamma4(n,i) = pi_k(i)*gauss(samples(n,:),mu(i,:),reshape(Sigma(i,:,:),[4,4])) / sum_K;
+    end
+end
+
+%%
+figure; hold on; 
+[argvalue, argmax] = max(gamma');
+[argvalue, argmax4] = max(gamma4');
+colors = {'b.','g.', 'r.','c.'} ;
+colorf = {'b','g', 'r','c'} ;
+
+for i = 1:K
+    scatter(X(argmax==i,1),X(argmax==i,2), colors{i})
+end
+legend('Group 1', 'Group 2','Group 3','Group 4')
+for i = 1:K
+    scatter(samples(argmax4==i,1),samples(argmax4==i,2),100,'k','LineWidth',1,'MarkerFaceColor',colorf{i})
+end  
+text(A(1),A(2),'A','FontSize',18,'FontWeight','bold')
+text(B(1),B(2),'B','FontSize',18,'FontWeight','bold')
+text(C(1),C(2),'C','FontSize',18,'FontWeight','bold')
+text(D(1),D(2),'D','FontSize',18,'FontWeight','bold')
+title('x_1 x_2 coordinates colored by most probable component')
+xlabel('x_1')
+ylabel('x_2')
 hold off;
